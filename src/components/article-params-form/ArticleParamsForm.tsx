@@ -33,15 +33,17 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({
 	articleParams,
 	setArticleParams,
 }) => {
-	const [click, setClick] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const [tempParams, setTempParams] = useState(articleParams);
 	const formRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		if (!isOpen) return;
+
 		const handleClickOutside = (event: MouseEvent) => {
 			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				setClick(false);
+				setIsOpen(false);
 			}
 		};
 
@@ -50,7 +52,7 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		setTempParams(articleParams);
@@ -77,9 +79,9 @@ export const ArticleParamsForm: React.FC<ArticleParamsFormProps> = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={click} onClick={() => setClick((prev) => !prev)} />
+			<ArrowButton isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} />
 			<aside
-				className={`${styles.container} ${click ? styles.container_open : ''}`}
+				className={`${styles.container} ${isOpen ? styles.container_open : ''}`}
 				ref={formRef}>
 				<form className={styles.form} onSubmit={handleApply}>
 					<Text as='h2' size={31} weight={800} uppercase>
